@@ -58,14 +58,33 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-window.addEventListener('keydown', function(e) {
-const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
-const key = document.querySelector(`.key[data-key="${e.keyCode}"]`); // Enables the key to have a visual change
-if (!audio) return; // stop function from running all together
-audio.currentTime = 0; // rewind to start - allows key to be played in rapid succession
-audio.play();
-console.log(key);
-}); 
+  // Takeaways: 
+  // Key events
+  // Listening for audio
+  // Listening for transition/animation end event
+
+function playSound(e) {
+  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+  const key = document.querySelector(`.key[data-key="${e.keyCode}"]`); // Enables the key to have a visual change
+  if (!audio) return; // stop function from running all together
+  audio.currentTime = 0; // rewind to start - allows key to be played in rapid succession
+  audio.play();
+  // key.addClass('playing') if we were using jquery
+  key.classList.add('playing');
+  // key.classList.remove('playing'); other actions that can be used
+  // key.classList.toggle('playing'); other actions that can be used 
+};
+
+function removeTransition(e) {
+   if(e.propertyName !== 'transform') return; // skip if it is not transform
+   this.classList.remove('playing');
+}
+
+const keys = document.querySelectorAll('.key');
+// keys.addEventListener('transitionend'); We are working with a node list, not an array so this will not work!
+keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+window.addEventListener('keydown', playSound); 
 </script>
 
 
